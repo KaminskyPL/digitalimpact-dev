@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galeria Audio – Dobierz Zestaw</title>
+<style>
+/* =============================================
+   RESET & BASE
+============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #fff;
+  color: #222;
+}
+
+/* =============================================
+   DESIGN TOKENS (zgodne ze wzorcem)
+============================================= */
+:root {
+  --blue-primary: #185FA5;
+  --blue-dark: #0C447C;
+  --blue-light-bg: #E6F1FB;
+  --text-primary: #222;
+  --text-secondary: #555;
+  --text-muted: #444;
+  --bg-light: #f0f0f0;
+  --border-color: #e5e3dc;
+  --border-radius-card: 12px;
+  --border-radius-badge: 6px;
+  --border-radius-section: 8px;
+  --transition-card: 150ms ease;
+}
+
+/* =============================================
+   WRAPPER
+============================================= */
+.gallery-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+/* =============================================
+   STATUS BAR
+============================================= */
+.status-bar {
+  background: var(--bg-light);
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 0;
+  margin: 0 -16px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 200ms ease, opacity 200ms ease;
+  opacity: 0;
+}
+
+.status-bar.visible {
+  max-height: 80px;
+  opacity: 1;
+}
+
+.status-bar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.pill {
+  background: var(--blue-light-bg);
+  color: var(--blue-dark);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-badge);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: background 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+.pill:hover {
+  background: var(--blue-primary);
+  color: #fff;
+}
+
+.btn-reset {
+  color: var(--text-secondary);
+  font-size: 13px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color 120ms ease;
+  flex-shrink: 0;
+}
+.btn-reset:hover { color: #c00; }
+
+/* =============================================
+   BREADCRUMB
+============================================= */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 20px 0 24px;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-sep {
+  color: #bbb;
+  font-size: 12px;
+}
+
+.breadcrumb-item {
+  color: var(--text-secondary);
+}
+
+.breadcrumb-item.link {
+  color: var(--blue-primary);
+  cursor: pointer;
+  text-decoration: none;
+}
+.breadcrumb-item.link:hover { text-decoration: underline; }
+.breadcrumb-item.active { color: var(--text-primary); font-weight: 600; }
+
+/* =============================================
+   BACK BUTTON
+============================================= */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--blue-primary);
+  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 120ms ease;
+}
+.btn-back:hover { color: var(--blue-dark); }
+.btn-back.hidden { display: none; }
+
+/* =============================================
+   SECTION TITLE
+============================================= */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+/* =============================================
+   VIEW CONTAINER & TRANSITIONS
+============================================= */
+.gallery-view {
+  transition: opacity 150ms ease;
+}
+.gallery-view--leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+.gallery-view--entering {
+  opacity: 0;
+}
+
+/* =============================================
+   CARD GRID — POZIOM 1 & 2
+============================================= */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+/* =============================================
+   CARD
+============================================= */
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-card);
+  overflow: hidden;
+  cursor: pointer;
+  background: #fff;
+  transition: transform var(--transition-card), box-shadow var(--transition-card);
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.card.card-animate {
+  animation: cardEnter 220ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes cardEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(24, 95, 165, 0.10);
+}
+
+.card-img-wrap {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--bg-light);
+}
+
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 300ms ease;
+}
+
+.card:hover .card-img-wrap img { transform: scale(1.03); }
+
+.card-body {
+  padding: 14px 16px;
+}
+
+.card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color var(--transition-card);
+}
+
+.card:hover .card-name { color: var(--blue-primary); }
+
+
+/* =============================================
+   SLIDER — POZIOM 4
+============================================= */
+.slider-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-card);
+  border: 1px solid var(--border-color);
+  background: var(--bg-light);
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.slide {
+  min-width: 100%;
+  flex-shrink: 0;
+}
+
+.slide a {
+  display: block;
+  text-decoration: none;
+}
+
+.slide-img-wrap {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--bg-light);
+}
+
+.slide-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.slide-footer {
+  padding: 16px 20px;
+  background: #fff;
+}
+
+.slide-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--blue-primary);
+  text-align: center;
+}
+
+/* Strzałki */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.slider-btn:hover {
+  background: var(--blue-primary);
+  border-color: var(--blue-primary);
+}
+.slider-btn:hover svg { stroke: #fff; }
+.slider-btn svg { stroke: var(--blue-primary); transition: stroke 150ms ease; }
+.slider-btn--prev { left: 12px; }
+.slider-btn--next { right: 12px; }
+
+/* Dots */
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-color);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: background 150ms ease, transform 150ms ease;
+}
+.dot.active {
+  background: var(--blue-primary);
+  transform: scale(1.25);
+}
+
+</style>
+</head>
+<body>
+
+<div class="gallery-wrapper" id="galleryWrapper">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar" id="statusBar">
+    <div class="status-bar-inner">
+      <div class="status-pills" id="statusPills"></div>
+      <button class="btn-reset" id="btnReset" onclick="Gallery.reset()">✕ Zacznij od nowa</button>
+    </div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb" id="breadcrumb" aria-label="Nawigacja okruszkowa"></nav>
+
+  <!-- BACK BUTTON -->
+  <button class="btn-back hidden" id="btnBack" onclick="Gallery.goBack()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Wstecz
+  </button>
+
+  <!-- MAIN VIEW -->
+  <div id="mainView" class="gallery-view"></div>
+
+</div>
+
+<script>
+(function() {
+
+  // ─── DATA ──────────────────────────────────────────────────────────────────
+
+  const ROOMS = [
+    'Salon', 'Gabinet', 'Kuchnia', 'Sypialnia', 'Łazienka',
+    'Taras', 'Biblioteka', 'Pokój kinowy', 'Jadalnia'
+  ];
+  const STYLES_COUNT = 6;
+  const SLIDES_COUNT = 9;
+
+  // ─── STATE ─────────────────────────────────────────────────────────────────
+
+  const state = {
+    level: 1,
+    room: null,
+    style: null,
+    sliderIndex: 0
+  };
+
+  // ─── DOM REFS ──────────────────────────────────────────────────────────────
+
+  const mainView   = document.getElementById('mainView');
+  const breadcrumb = document.getElementById('breadcrumb');
+  const btnBack    = document.getElementById('btnBack');
+  const statusBar  = document.getElementById('statusBar');
+  const statusPills = document.getElementById('statusPills');
+
+  // ─── HELPERS ───────────────────────────────────────────────────────────────
+
+  function placeholderSrc(w, h, text, bg = 'e5e3dc', fg = '555') {
+    // Inline SVG placeholder — no external requests needed
+    const bgColor = bg.startsWith('#') ? bg : `#${bg}`;
+    const fgColor = fg.startsWith('#') ? fg : `#${fg}`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+      <rect width="${w}" height="${h}" fill="${bgColor}"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        font-family="sans-serif" font-size="32" fill="${fgColor}" font-weight="600">${text}</text>
+    </svg>`;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  }
+
+  function lazyPlaceholder() {
+    // 1×1 transparent GIF
+    return 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+  }
+
+  function triggerStagger(cards) {
+    cards.forEach((card, i) => {
+      setTimeout(() => {
+        card.classList.add('card-animate');
+      }, i * 50);
+    });
+  }
+
+  // ─── TRANSITIONS ───────────────────────────────────────────────────────────
+
+  function transition(renderFn) {
+    mainView.classList.add('gallery-view--leaving');
+    setTimeout(() => {
+      mainView.classList.remove('gallery-view--leaving');
+      mainView.classList.add('gallery-view--entering');
+      renderFn();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          mainView.classList.remove('gallery-view--entering');
+        });
+      });
+    }, 150);
+  }
+
+  // ─── BREADCRUMB ────────────────────────────────────────────────────────────
+
+  function renderBreadcrumb() {
+    let html = '';
+    const sep = `<span class="breadcrumb-sep">›</span>`;
+
+    if (state.level === 1) {
+      html = `<span class="breadcrumb-item active">Wybierz pomieszczenie</span>`;
+    } else if (state.level === 2) {
+      html = `<span class="breadcrumb-item link" onclick="Gallery.goToLevel(1)">Wybierz pomieszczenie</span>${sep}<span class="breadcrumb-item active">${state.room}</span>`;
+    } else if (state.level === 3) {
+      html = `<span class="breadcrumb-item link" onclick="Gallery.goToLevel(1)">Wybierz pomieszczenie</span>${sep}<span class="breadcrumb-item link" onclick="Gallery.goToLevel(2)">${state.room}</span>${sep}<span class="breadcrumb-item active">${state.style}</span>`;
+    }
+
+    breadcrumb.innerHTML = html;
+  }
+
+  // ─── STATUS BAR ────────────────────────────────────────────────────────────
+
+  function renderStatusBar() {
+    if (state.level <= 1) {
+      statusBar.classList.remove('visible');
+      return;
+    }
+    statusBar.classList.add('visible');
+
+    let pills = '';
+    if (state.room) {
+      pills += `<button class="pill" onclick="Gallery.goToLevel(1)">Pomieszczenie: ${state.room}</button>`;
+    }
+    if (state.style && state.level >= 3) {
+      pills += `<button class="pill" onclick="Gallery.goToLevel(2)">Styl: ${state.style}</button>`;
+    }
+    statusPills.innerHTML = pills;
+  }
+
+  // ─── BACK BUTTON ───────────────────────────────────────────────────────────
+
+  function renderBackBtn() {
+    if (state.level > 1) {
+      btnBack.classList.remove('hidden');
+    } else {
+      btnBack.classList.add('hidden');
+    }
+  }
+
+  // ─── LEVEL 1 — ROOMS ───────────────────────────────────────────────────────
+
+  function renderLevel1() {
+    let cardsHtml = ROOMS.map((room) => `
+      <div class="card" onclick="Gallery.pickRoom('${room}')">
+        <div class="card-img-wrap">
+          <img data-src="${placeholderSrc(1200, 900, room)}" src="${lazyPlaceholder()}" alt="${room}">
+        </div>
+        <div class="card-body">
+          <div class="card-name">${room}</div>
+        </div>
+      </div>
+    `).join('');
+
+    mainView.innerHTML = `
+      <div class="section-title">Wybierz pomieszczenie</div>
+      <div class="card-grid" id="cardGrid">${cardsHtml}</div>
+    `;
+
+    loadVisibleImages();
+    staggerCards();
+  }
+
+  // ─── LEVEL 2 — STYLES ──────────────────────────────────────────────────────
+
+  function renderLevel2() {
+    const styles = Array.from({length: STYLES_COUNT}, (_, i) => `${state.room} ${i + 1}`);
+
+    let cardsHtml = styles.map((s) => `
+      <div class="card" onclick="Gallery.pickStyle('${s}')">
+        <div class="card-img-wrap">
+          <img data-src="${placeholderSrc(1200, 900, s)}" src="${lazyPlaceholder()}" alt="${s}">
+        </div>
+        <div class="card-body">
+          <div class="card-name">${s}</div>
+        </div>
+      </div>
+    `).join('');
+
+    mainView.innerHTML = `
+      <div class="section-title">Wybierz styl – ${state.room}</div>
+      <div class="card-grid" id="cardGrid">${cardsHtml}</div>
+    `;
+
+    loadVisibleImages();
+    staggerCards();
+  }
+
+
+  // ─── LEVEL 3 — SLIDER ──────────────────────────────────────────────────────
+
+  function renderLevel3() {
+    state.sliderIndex = 0;
+
+    const slidesHtml = Array.from({length: SLIDES_COUNT}, (_, i) => {
+      const name = `Zestaw ${i + 1}`;
+      const isSrc = (i === 0) ? placeholderSrc(1200, 900, name, 'dce8f5', '185FA5') : lazyPlaceholder();
+      const dataSrc = placeholderSrc(1200, 900, name, 'dce8f5', '185FA5');
+      return `
+        <div class="slide" data-index="${i}">
+          <a href="https://" target="_blank" rel="noopener">
+            <div class="slide-img-wrap">
+              <img src="${isSrc}" ${i !== 0 ? `data-src="${dataSrc}"` : ''} alt="${name}" loading="lazy">
+            </div>
+            <div class="slide-footer">
+              <div class="slide-name">${name}</div>
+            </div>
+          </a>
+        </div>
+      `;  // nazwa i zdjęcie objęte tym samym <a>
+    }).join('');
+
+    const dotsHtml = Array.from({length: SLIDES_COUNT}, (_, i) =>
+      `<button class="dot ${i === 0 ? 'active' : ''}" onclick="Gallery.sliderGoTo(${i})"></button>`
+    ).join('');
+
+    mainView.innerHTML = `
+      <div class="section-title">Wybierz zestaw – ${state.style}</div>
+      <div class="slider-wrap">
+        <button class="slider-btn slider-btn--prev" onclick="Gallery.sliderPrev()" aria-label="Poprzedni">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 4L7 10L13 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="slider-track" id="sliderTrack">${slidesHtml}</div>
+        <button class="slider-btn slider-btn--next" onclick="Gallery.sliderNext()" aria-label="Następny">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 4L13 10L7 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="slider-dots" id="sliderDots">${dotsHtml}</div>
+    `;
+
+    // preload neighbor
+    sliderLoadAround(0);
+  }
+
+  // ─── SLIDER LOGIC ──────────────────────────────────────────────────────────
+
+  function sliderGoTo(index) {
+    if (index < 0) index = SLIDES_COUNT - 1;
+    if (index >= SLIDES_COUNT) index = 0;
+    state.sliderIndex = index;
+
+    const track = document.getElementById('sliderTrack');
+    if (track) {
+      track.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+
+    sliderLoadAround(index);
+  }
+
+  function sliderLoadAround(index) {
+    const toLoad = new Set([index, index - 1, index + 1].filter(i => i >= 0 && i < SLIDES_COUNT));
+    toLoad.forEach(i => {
+      const slide = document.querySelector(`.slide[data-index="${i}"]`);
+      if (!slide) return;
+      const img = slide.querySelector('img');
+      if (img && img.dataset.src) {
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+      }
+    });
+  }
+
+  // ─── LAZY LOAD HELPERS ─────────────────────────────────────────────────────
+
+  function loadVisibleImages() {
+    const imgs = mainView.querySelectorAll('img[data-src]');
+    imgs.forEach(img => {
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    });
+  }
+
+  function staggerCards() {
+    const cards = mainView.querySelectorAll('.card');
+    triggerStagger(Array.from(cards));
+  }
+
+  // ─── NAVIGATION ────────────────────────────────────────────────────────────
+
+  function goToLevel(lvl) {
+    if (lvl === state.level) return;
+
+    // Reset downstream state
+    if (lvl <= 1) { state.room = null; state.style = null; }
+    if (lvl <= 2) { state.style = null; }
+
+    state.level = lvl;
+    renderBreadcrumb();
+    renderStatusBar();
+    renderBackBtn();
+
+    const renderMap = { 1: renderLevel1, 2: renderLevel2, 3: renderLevel3 };
+    transition(renderMap[lvl]);
+  }
+
+  // ─── PUBLIC API ────────────────────────────────────────────────────────────
+
+  window.Gallery = {
+    pickRoom(room) {
+      state.room = room;
+      state.level = 2;
+      renderBreadcrumb();
+      renderStatusBar();
+      renderBackBtn();
+      transition(renderLevel2);
+    },
+
+    pickStyle(style) {
+      state.style = style;
+      state.level = 3;
+      renderBreadcrumb();
+      renderStatusBar();
+      renderBackBtn();
+      transition(renderLevel3);
+    },
+
+    goToLevel(lvl) { goToLevel(lvl); },
+
+    goBack() { goToLevel(state.level - 1); },
+
+    reset() {
+      state.level = 1;
+      state.room = null;
+      state.style = null;
+      state.sliderIndex = 0;
+      renderBreadcrumb();
+      renderStatusBar();
+      renderBackBtn();
+      transition(renderLevel1);
+    },
+
+    sliderPrev() { sliderGoTo(state.sliderIndex - 1); },
+    sliderNext() { sliderGoTo(state.sliderIndex + 1); },
+    sliderGoTo(i) { sliderGoTo(i); }
+  };
+
+  // ─── INIT ──────────────────────────────────────────────────────────────────
+
+  renderBreadcrumb();
+  renderStatusBar();
+  renderBackBtn();
+  renderLevel1();
+
+})();
+</script>
+</body>
+</html>
