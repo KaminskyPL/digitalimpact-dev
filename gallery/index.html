@@ -782,6 +782,13 @@ body {
 
   // ─── INIT ──────────────────────────────────────────────────────────────────
 
+  // Obsługa strzałek klawiatury dla slidera
+  document.addEventListener('keydown', function(e) {
+    if (state.level !== 3) return;
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); Gallery.sliderPrev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); Gallery.sliderNext(); }
+  });
+
   renderBreadcrumb();
   renderStatusBar();
   renderBackBtn();
