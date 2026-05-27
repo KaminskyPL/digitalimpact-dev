@@ -405,6 +405,50 @@ body {
   const STYLES_COUNT = 6;
   const SLIDES_COUNT = 9;
 
+  // Zdjęcia poziomu 1 — indeks = pozycja w tablicy ROOMS (0-based)
+  const ROOM_IMAGES = [
+    'images/gi1.jpg',   // Salon
+    'images/gi2.jpg',   // Gabinet
+    'images/gi3.jpg',   // Kuchnia
+    'images/gi4.jpg',   // Sypialnia
+    'images/gi5.jpg',   // Łazienka
+    'images/gi6.jpg',   // Taras
+    null,               // Biblioteka — brak
+    'images/gi8.jpg',   // Pokój kinowy
+    'images/gi9.jpg',   // Jadalnia
+  ];
+
+  // Zdjęcia poziomu 2 — klucz: "NazwaPomieszczenia N"
+  const STYLE_IMAGES = {
+    'Salon 1':        'images/gi11.jpg',
+    'Salon 2':        'images/gi12.jpg',
+    'Salon 3':        'images/gi13.jpg',
+    'Salon 4':        'images/gi14.jpg',
+    'Salon 5':        'images/gi15.jpg',
+    'Salon 6':        'images/gi16.jpg',
+    'Gabinet 1':      'images/gi21.jpg',
+    'Kuchnia 1':      'images/gi31.jpg',
+    'Sypialnia 1':    'images/gi41.jpg',
+    'Sypialnia 2':    'images/gi42.jpg',
+    'Łazienka 1':     'images/gi51.jpg',
+    'Taras 1':        'images/gi61.jpg',
+    'Biblioteka 1':   'images/gi71.jpg',
+    'Pokój kinowy 1': 'images/gi81.jpg',
+    'Jadalnia 1':     'images/gi91.jpg',
+  };
+
+  // Zdjęcia poziomu 3 — klucz: "NazwaPomieszczenia N|N" (styl|zestaw, 1-based)
+  const SET_IMAGES = {
+    'Salon 1|1': 'images/gi111.jpg',
+    'Salon 1|2': 'images/gi112.jpg',
+    'Salon 2|1': 'images/gi121.jpg',
+    'Salon 2|2': 'images/gi122.jpg',
+    'Salon 3|1': 'images/gi131.jpg',
+    'Salon 4|1': 'images/gi141.jpg',
+    'Salon 5|1': 'images/gi151.jpg',
+    'Salon 6|1': 'images/gi161.jpg',
+  };
+
   // ─── STATE ─────────────────────────────────────────────────────────────────
 
   const state = {
@@ -423,6 +467,13 @@ body {
   const statusPills = document.getElementById('statusPills');
 
   // ─── HELPERS ───────────────────────────────────────────────────────────────
+
+  function imageSrc(mapOrPath, key) {
+    if (typeof mapOrPath === 'object' && mapOrPath !== null) {
+      return mapOrPath[key] || null;
+    }
+    return mapOrPath || null;
+  }
 
   function placeholderSrc(w, h, text, bg = 'e5e3dc', fg = '555') {
     // Inline SVG placeholder — no external requests needed
@@ -514,16 +565,20 @@ body {
   // ─── LEVEL 1 — ROOMS ───────────────────────────────────────────────────────
 
   function renderLevel1() {
-    let cardsHtml = ROOMS.map((room) => `
+    let cardsHtml = ROOMS.map((room, idx) => {
+      const imgPath = ROOM_IMAGES[idx];
+      const imgSrc = imgPath ? imgPath : placeholderSrc(1200, 900, room);
+      return `
       <div class="card" onclick="Gallery.pickRoom('${room}')">
         <div class="card-img-wrap">
-          <img data-src="${placeholderSrc(1200, 900, room)}" src="${lazyPlaceholder()}" alt="${room}">
+          <img data-src="${imgSrc}" src="${lazyPlaceholder()}" alt="${room}">
         </div>
         <div class="card-body">
           <div class="card-name">${room}</div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     mainView.innerHTML = `
       <div class="section-title">Wybierz pomieszczenie</div>
@@ -539,16 +594,20 @@ body {
   function renderLevel2() {
     const styles = Array.from({length: STYLES_COUNT}, (_, i) => `${state.room} ${i + 1}`);
 
-    let cardsHtml = styles.map((s) => `
+    let cardsHtml = styles.map((s) => {
+      const imgPath = STYLE_IMAGES[s] || null;
+      const imgSrc = imgPath ? imgPath : placeholderSrc(1200, 900, s);
+      return `
       <div class="card" onclick="Gallery.pickStyle('${s}')">
         <div class="card-img-wrap">
-          <img data-src="${placeholderSrc(1200, 900, s)}" src="${lazyPlaceholder()}" alt="${s}">
+          <img data-src="${imgSrc}" src="${lazyPlaceholder()}" alt="${s}">
         </div>
         <div class="card-body">
           <div class="card-name">${s}</div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     mainView.innerHTML = `
       <div class="section-title">Wybierz styl – ${state.room}</div>
@@ -567,8 +626,11 @@ body {
 
     const slidesHtml = Array.from({length: SLIDES_COUNT}, (_, i) => {
       const name = `Zestaw ${i + 1}`;
-      const isSrc = (i === 0) ? placeholderSrc(1200, 900, name, 'dce8f5', '185FA5') : lazyPlaceholder();
-      const dataSrc = placeholderSrc(1200, 900, name, 'dce8f5', '185FA5');
+      const key = `${state.style}|${i + 1}`;
+      const imgPath = SET_IMAGES[key] || null;
+      const realSrc = imgPath ? imgPath : placeholderSrc(1200, 900, name, 'dce8f5', '185FA5');
+      const isSrc = (i === 0) ? realSrc : lazyPlaceholder();
+      const dataSrc = realSrc;
       return `
         <div class="slide" data-index="${i}">
           <a href="https://" target="_blank" rel="noopener">
