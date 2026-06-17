@@ -1,0 +1,613 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* ============================================================
+   ZMIENNE I KOLORY
+   ============================================================ */
+.dh-root,
+.dh-hero,
+.dh-products,
+.dh-series,
+.dh-video,
+.dh-model,
+.dh-heos,
+.dh-footer {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #1A1A1A;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   KONTENER RESPONSYWNY
+   ============================================================ */
+.dh-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 960px) {
+  .dh-container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1230px) {
+  .dh-container {
+    max-width: 1218px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .dh-container {
+    max-width: 1376px;
+  }
+}
+
+/* ============================================================
+   TYPOGRAFIA OGÓLNA — tylko przez klasy
+   ============================================================ */
+.dh-section-heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+.dh-section-heading--light {
+  color: #FFFFFF;
+}
+
+.dh-accent {
+  color: #E8533E;
+}
+
+.dh-accent-light {
+  color: #7FB3F5;
+}
+
+/* ============================================================
+   PRZYCISKI
+   ============================================================ */
+.dh-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+  border: none;
+  line-height: 1.4;
+}
+
+.dh-btn:hover {
+  opacity: 0.88;
+}
+
+.dh-btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.dh-btn--primary {
+  background-color: #C8102E;
+  color: #FFFFFF;
+  border: none;
+}
+
+.dh-btn--outline {
+  background-color: transparent;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+}
+
+.dh-btn--light {
+  background-color: #FFFFFF;
+  color: #C8102E;
+  border: none;
+}
+
+/* ============================================================
+   [1] HERO BANNER
+   ============================================================ */
+.dh-hero {
+  background: linear-gradient(135deg, #C8102E 0%, #E8533E 100%);
+  width: 100%;
+  overflow: hidden;
+}
+
+.dh-hero__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 64px 0;
+  min-height: 480px;
+}
+
+.dh-hero__left {
+  flex: 1 1 50%;
+  min-width: 0;
+}
+
+.dh-hero__right {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dh-logo {
+  display: inline-block;
+  background-color: #C8102E;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  letter-spacing: 0.12em;
+  padding: 8px 20px;
+  border: 3px solid #FFFFFF;
+  margin-bottom: 24px;
+  line-height: 1;
+}
+
+.dh-hero__heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 20px 0;
+  line-height: 1.15;
+}
+
+.dh-hero-claim {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.dh-hero-product {
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  background-color: rgba(255, 255, 255, 0.08);
+  min-width: 200px;
+  min-height: 200px;
+}
+
+@media (max-width: 959px) {
+  .dh-hero__inner {
+    flex-direction: column;
+    padding: 48px 0;
+    min-height: auto;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .dh-hero__left {
+    flex: none;
+  }
+
+  .dh-hero__right {
+    flex: none;
+    width: 100%;
+  }
+
+  .dh-logo {
+    font-size: 36px;
+  }
+
+  .dh-hero__heading {
+    font-size: 2rem;
+  }
+
+  .dh-hero-product {
+    max-height: 260px;
+  }
+}
+
+/* ============================================================
+   [2] GRID PRODUKTÓW
+   ============================================================ */
+.dh-products {
+  background-color: #FFFFFF;
+  padding: 64px 0;
+}
+
+.dh-products-slot {
+  margin-bottom: 40px;
+  min-height: 4px;
+  border-left: 4px solid #C8102E;
+  padding-left: 16px;
+}
+
+.dh-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.dh-product-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 4px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.dh-product-card__img-placeholder {
+  width: 200px;
+  height: 200px;
+  max-width: 100%;
+  background-color: #E0E0E0;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.dh-product-name {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dh-product-price {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #C8102E;
+  margin: 0;
+}
+
+@media (max-width: 959px) and (min-width: 600px) {
+  .dh-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 599px) {
+  .dh-products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   [3] SEKCJA SERIA DENON HOME
+   ============================================================ */
+.dh-series {
+  background-color: #F5F5F5;
+  padding: 72px 0;
+}
+
+.dh-series__subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+  line-height: 1.3;
+}
+
+.dh-series__intro {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 400;
+  color: #1A1A1A;
+  line-height: 1.75;
+  margin: 0;
+  max-width: 780px;
+}
+
+/* ============================================================
+   [4] SEKCJA VIDEO
+   ============================================================ */
+.dh-video {
+  background-color: #000000;
+  padding: 64px 0;
+}
+
+.dh-video__wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.dh-video-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* fallback dla przeglądarek bez aspect-ratio */
+@supports not (aspect-ratio: 16 / 9) {
+  .dh-video__wrapper {
+    padding-bottom: 56.25%;
+    height: 0;
+    position: relative;
+  }
+}
+
+/* ============================================================
+   [5] SEKCJE MODELI
+   ============================================================ */
+.dh-model {
+  display: flex;
+  min-height: 480px;
+  overflow: hidden;
+}
+
+.dh-model__img-half {
+  flex: 1 1 50%;
+  background-color: #D0C8C0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  max-height: 560px;
+}
+
+.dh-model__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background-color: #D0C8C0;
+}
+
+.dh-model__img-half--light {
+  background-color: #E8E0D8;
+}
+
+.dh-model__text-half {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 48px;
+  box-sizing: border-box;
+}
+
+.dh-model__text-half--accent {
+  background-color: #E8533E;
+}
+
+.dh-model__text-half--light {
+  background-color: #F5F5F5;
+}
+
+.dh-model__content {
+  max-width: 480px;
+  width: 100%;
+}
+
+.dh-model__heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 20px 0;
+  line-height: 1.2;
+}
+
+.dh-model__heading--dark {
+  color: #1A1A1A;
+}
+
+.dh-model__desc {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+}
+
+.dh-model__desc--dark {
+  color: #1A1A1A;
+}
+
+@media (max-width: 959px) {
+  .dh-model {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .dh-model--left-light {
+    flex-direction: column-reverse;
+  }
+
+  .dh-model__img-half {
+    flex: none;
+    width: 100%;
+    min-height: 280px;
+    max-height: none;
+    aspect-ratio: 4 / 3;
+  }
+
+  .dh-model__text-half {
+    flex: none;
+    width: 100%;
+    padding: 48px 24px;
+  }
+
+  .dh-model__text-half--accent {
+    width: 100%;
+  }
+
+  .dh-model__text-half--light {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   [6] SEKCJA HEOS
+   ============================================================ */
+.dh-heos {
+  background: linear-gradient(135deg, #0F1F3D 0%, #1A3A6E 100%);
+  padding: 80px 0;
+}
+
+.dh-heos__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.dh-heos__text {
+  flex: 1 1 60%;
+  min-width: 0;
+}
+
+.dh-heos__badge-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dh-heos__heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 20px 0;
+  line-height: 1.25;
+}
+
+.dh-heos__desc {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+  opacity: 0.9;
+}
+
+.dh-heos-badge {
+  background-color: #2D7EF8;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  letter-spacing: 0.2em;
+  padding: 24px 48px;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 959px) {
+  .dh-heos__inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .dh-heos__text {
+    flex: none;
+  }
+
+  .dh-heos__badge-wrap {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   [7] STOPKA LP
+   ============================================================ */
+.dh-footer {
+  background-color: #F5F5F5;
+  padding: 48px 0;
+}
+
+.dh-footer-share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.dh-footer-share__label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.dh-footer-share__sub {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #1A1A1A;
+  margin: 0 0 16px 0;
+}
+
+.dh-footer-share__icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dh-share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #E0E0E0;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.dh-share-btn:hover {
+  background-color: #C8102E;
+}
+
+.dh-share-btn:hover .dh-share-btn__icon path {
+  fill: #FFFFFF;
+}
+
+.dh-share-btn__icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.dh-share-btn--copy {
+  padding: 0;
+}
