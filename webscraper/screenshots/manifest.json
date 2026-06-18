@@ -1,0 +1,52 @@
+[
+  {
+    "lp": 1,
+    "sklep": "RTV EURO AGD",
+    "url": "https://www.euro.com.pl/amplitunery/denon-avr-x2800h-dab.bhtml",
+    "cena": "BŁĄD ŁADOWANIA",
+    "data": "18.06.2026 11:47",
+    "file": "01_www_euro_com_pl_amplitunery_denon_avr_x2800h_dab_bhtml_error.png",
+    "status": "ERROR",
+    "error": "HTTP 403"
+  },
+  {
+    "lp": 2,
+    "sklep": "x-kom",
+    "url": "https://www.x-kom.pl/p/1142425-amplituner-denon-avr-x2800h-dab.html",
+    "cena": "Cena: 3 499,00 zł 3 499 00 zł",
+    "data": "18.06.2026 11:47",
+    "file": "02_www_x_kom_pl_p_1142425_amplituner_denon_avr_x2800h_dab_html.png",
+    "status": "OK",
+    "error": null
+  },
+  {
+    "lp": 3,
+    "sklep": "HiFi24",
+    "url": "https://hifi24.pl/denon-avr-x2800h-dab-amplituner-sieciowy-7-2-8k.html",
+    "cena": "3 499,00 zł",
+    "data": "18.06.2026 11:47",
+    "file": "03_hifi24_pl_denon_avr_x2800h_dab_amplituner_sieciowy_7_2_8k_html.png",
+    "status": "OK",
+    "error": null
+  },
+  {
+    "lp": 4,
+    "sklep": "Allegro",
+    "url": "https://allegro.pl/listing?string=denon+avr-x2800h+dab",
+    "cena": "BŁĄD ŁADOWANIA",
+    "data": "18.06.2026 11:47",
+    "file": "04_allegro_pl_listing_string_denon_avr_x2800h_dab_error.png",
+    "status": "ERROR",
+    "error": "HTTP 403"
+  },
+  {
+    "lp": 5,
+    "sklep": "Teufel",
+    "url": "https://teufelaudio.pl/denon-avr-x2800h-dab-107000515",
+    "cena": "NIEDOSTĘPNY",
+    "data": "18.06.2026 11:47",
+    "file": "05_teufelaudio_pl_denon_avr_x2800h_dab_107000515_no_price.png",
+    "status": "NO_PRICE_ELEMENT",
+    "error": null
+  }
+]
